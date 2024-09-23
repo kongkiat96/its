@@ -82,6 +82,23 @@ $get_admin = $getdata->my_sql_query($connect, NULL, "user", "user_key = '" . $_S
     </div>
   </div>
 
+  <div class="form-group row">
+    <div class="col-12">
+      <label for="name_it">ชื่อช่างผู้ดำเนินงาน</label>
+      <select class="form-control select2bs4" name="name_it[]" multiple="multiple">
+        <?php
+        $chk_case_name_it = explode(",", $chk_case->name_it);
+        $getuser = $getdata->my_sql_select($connect, NULL, "user", "user_status = '1' AND user_class = '2'");
+        while ($showUser = mysqli_fetch_object($getuser)) {
+          $selected = (in_array(getemployee($showUser->user_key), $chk_case_name_it)) ? 'selected' : '';
+          echo '<option value="' . getemployee($showUser->user_key) . '" ' . $selected . '>' . getemployee($showUser->user_key) . '</option>';
+        }
+
+        ?>
+      </select>
+    </div>
+  </div>
+
   <?php if ($_SESSION['uclass'] != 1) { ?>
     <div class="form-group row">
       <div class="col-md-6 col-sm-12">

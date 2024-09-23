@@ -280,7 +280,7 @@ include_once 'procress/dataSave.php';
               <th>สถานะ : </th>
               <th>วันที่แจ้ง : </th>
               <th>เวลา : </th>
-
+              <th>ช่างผู้ดำเนินงาน : </th>
               <th>ค่าใช้จ่าย : </th>
               <th>ดำเนินการ : </th>
               <th>ผู้ดำเนินการ : </th>
@@ -376,6 +376,7 @@ include_once 'procress/dataSave.php';
                   }
                   ?>
                 </td>
+                <td><?php echo !empty($show_total->name_it) ? str_replace(",", ",<br> ", $show_total->name_it) : '-';?></td>
                 <td>
                   <?php
                   if ($show_total->se_price != NULL) {

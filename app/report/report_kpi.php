@@ -168,7 +168,7 @@ if (isset($_POST['export'])) {
                         <tr>
                             <td>ลำดับ</td>
                             <td>Ticket</td>
-                            <td>รหัสสินทรัพย์</td>
+                            <!-- <td>รหัสสินทรัพย์</td> -->
                             <td>ชื่อผู้แจ้ง</td>
                             <td>สาขา</td>
                             <td>หมวดหมู่</td>
@@ -177,16 +177,17 @@ if (isset($_POST['export'])) {
                             <td>รายละเอียด</td>
                             <td>ผู้อนุมัติ</td>
                             <td>สถานะ</td>
-                            <td>ค่าใช้จ่าย</td>
+                            <!-- <td>ค่าใช้จ่าย</td> -->
                             <td>วันที่แจ้ง</td>
                             <td>วันที่เริ่มนับ (วันที่ User Manager Approve)</td>
-                            <td>วันที่แล้วเสร็จ (วันที่บันทึกสถานะ "ระบบใช้งานได้แล้ว/มีเครื่องใช้ทดแทน")</td>
+                            <td>วันที่หยุดนับ (วันที่บันทึกสถานะ "ระบบใช้งานได้แล้ว/มีเครื่องใช้ทดแทน")</td>
                             <td>ผู้ทำรายการ</td>
                             <td>SLA (วัน)</td>
                             <td>ระยะเวลาดำเนินการ(วัน)</td>
                             <td>ส่วนต่างเวลา (SLA-วันที่ใช้)</td>
                             <td>ผลการดำเนินการตาม SLA</td>
                             <td>หมายเหตุ</td>
+                            <td>ช่างผู้ดำเนินงาน</td>
 
                         </tr>
                     </thead>
@@ -203,7 +204,7 @@ if (isset($_POST['export'])) {
                                 <td><a href="?p=case_all_service&key=<?php echo $show_total->ticket; ?>" target="_blank"><?php echo $show_total->ticket; ?></a> </td>
                                 <!-- <td><?php echo @getemployee($show_total->user_key); ?></td>
                                 <td><?php echo @getemployee_department($show_total->user_key); ?></td> -->
-                                <td><?php echo $show_total->se_asset; ?></td>
+                                <!-- <td><?php echo $show_total->se_asset; ?></td> -->
                                 <td><?php
                                     $search = $getdata->my_sql_query($connect, NULL, "employee", "card_key ='" . $show_total->se_namecall . "'");
                                     if (COUNT($search) == 0) {
@@ -217,7 +218,7 @@ if (isset($_POST['export'])) {
                                 <td><?php echo @prefixbranch($show_total->se_location); ?></td>
                                 <td><?php echo @service($show_total->se_id); ?></td>
                                 <td><?php echo @prefixConvertorServiceList($show_total->se_li_id); ?></td>
-                                <td></td>
+                                <td><?php echo getSLAcode($show_total->se_li_id); ?></td>
                                 <td><?php echo $show_total->se_other; ?></td>
                                 <td><?php echo $show_total->se_approve; ?></td>
                                 <td class="text-center">
@@ -256,7 +257,7 @@ if (isset($_POST['export'])) {
 
                                     ?>
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <?php
                                     if ($show_total->se_price != NULL) {
                                         echo $show_total->se_price;
@@ -264,7 +265,7 @@ if (isset($_POST['export'])) {
                                         echo '<strong class="badge badge-danger">ไม่มีข้อมูล</font></strong>';
                                     }
                                     ?>
-                                </td>
+                                </td> -->
                                 <td><?php echo @dateConvertor($show_total->date); ?></td>
                                 <td>
                                     <?php echo @search_approveDate($show_total->ticket); ?>
@@ -350,6 +351,9 @@ if (isset($_POST['export'])) {
                                     ?>
                                 </td>
                                 <td></td>
+                                <td>
+                                    <?php echo !empty($show_total->name_it) ? str_replace(",", ", ", $show_total->name_it) : '-';?>
+                                </td>
 
                             </tr>
                         <?php

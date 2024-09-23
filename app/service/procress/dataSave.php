@@ -23,12 +23,14 @@ if (isset($_POST['save_offcase'])) {
             $getdata->my_sql_update($connect, 'problem_list', "pic_after ='" . $editpic . "'", "ticket='" . htmlspecialchars($_POST['card_key']) . "'");
         }
 
+        $name_it = implode(",", $_POST['name_it']);
 
         $getdata->my_sql_update(
             $connect,
             "problem_list",
             "card_status='" . htmlspecialchars($_POST['off_case_status']) . "',
             se_price = '" . htmlspecialchars($_POST['price']) . "',
+            name_it = '" . htmlspecialchars($name_it) . "',
       admin_update='" . $name_key . "',
       date_update='" . $_POST['date_off_case'] . "',
       time_update='" . date("H:i:s") . "'",
@@ -40,7 +42,7 @@ if (isset($_POST['save_offcase'])) {
             "problem_comment",
             "card_status='" . htmlspecialchars($_POST['off_case_status']) . "',
       admin_update='" . $name_key . "',
-      comment='" . htmlspecialchars($_POST['comment']) . "',
+      comment='" . htmlspecialchars($_POST['comment']) . ' - ช่างผู้ดำเนินงาน ' . htmlspecialchars($name_it) . "',
       price = '" . htmlspecialchars($_POST['price']) . "',
       date ='" . date("Y-m-d H:i:s") . "',
       ticket='" . htmlspecialchars($_POST['card_key']) . "'"
@@ -72,6 +74,8 @@ if (isset($_POST['save_offcase'])) {
          ผู้แจ้ง : ".@getemployee($namecall)."
          สาขา : $location
          รายละเอียด : $detail
+         ------------------------
+         ช่างผู้ดำเนินงาน : $name_it
          ------------------------
          วันที่: {$date_send}
          เวลา: {$time_send}
