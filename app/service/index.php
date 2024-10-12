@@ -405,6 +405,8 @@ include_once 'procress/dataSave.php';
                     }
                   }
                   ?>
+                  <a href="service/export_pdf.php?key=<?php echo @$show_total->ticket; ?>" target="_blank" class="btn btn-sm btn-danger" data-toggle="toptitle" data-placement="top" title="พิมพ์ใบงาน"><i class="far fa-file-pdf"></i></a>
+
                 </td>
                 <td>
                   <?php
