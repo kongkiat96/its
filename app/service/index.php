@@ -405,6 +405,8 @@ include_once 'procress/dataSave.php';
                     }
                   }
                   ?>
+                  <a href="service/export_pdf.php" target="_blank" class="btn btn-sm btn-outline-danger" data-toggle="toptitle" data-placement="top" title="พิมพ์ใบงาน"><i class="fa fa-print"></i></a>
+
                 </td>
                 <td>
                   <?php
