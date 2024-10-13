@@ -59,6 +59,8 @@ if ($getcontrol < 999) {
 
             $mailManager =  $getdata->my_sql_query($connect, NULL, "user", "user_key = '" . $chkManager->manager_user_key . "'");
 
+            $mapBranch = !empty($_POST['location']) ? htmlspecialchars($_POST['location']) : $_POST['department'];
+
             // echo $chkManager->manager_user_key; 13 16
             if (COUNT($chkManager) == 0) {
                 $getdata->my_sql_insert($connect, "problem_list", "
@@ -72,7 +74,7 @@ if ($getcontrol < 999) {
                 se_asset = '" . htmlspecialchars($_POST['se_asset']) . "',
                 pic_before = '" . $fixname_pic . "',
                 se_namecall = '" . $_SESSION['ukey'] . "',
-                se_location = '" . htmlspecialchars($_POST['location']) . "',
+                se_location = '" . $mapBranch . "',
                 se_approve = '" . htmlspecialchars($_POST['approve']) . "',
                 card_status = 'approve_mg',
                 date = '" . date("Y-m-d") . "',
@@ -91,7 +93,7 @@ if ($getcontrol < 999) {
                 se_asset = '" . htmlspecialchars($_POST['se_asset']) . "',
                 pic_before = '" . $fixname_pic . "',
                 se_namecall = '" . $chkManager->user_key . "',
-                se_location = '" . htmlspecialchars($_POST['location']) . "',
+                se_location = '" . $mapBranch . "',
                 se_approve = '" . getemployee($chkManager->manager_user_key) . "',
                 card_status = 'wait_approve',
                 manager_approve = '" . $chkManager->manager_user_key . "',
@@ -113,23 +115,28 @@ if ($getcontrol < 999) {
             $service = prefixConvertorService($_POST['se_id']);
             $problem = prefixConvertorServiceList($_POST['se_li']);
             $other = $rc_other;
-            // $namecall = getemployee($_POST['namecall']);
-            $namecall = $name_user;
-            $location = $_POST['location'];
+            $namecall = getemployee($_POST['namecall']);
+            // $namecall = $name_user;
+            $location = prefixbranch($mapBranch);
             $asset = $_POST['se_asset'];
             $approve = $_POST['approve'];
             $date_send = date('d/m/Y');
             $setNameMg = COUNT($chkManager) == 0 ? '-' : getemployee($chkManager->manager_user_key);
             $line_token = $getalert->alert_line_token; // Token
             // $mailMu = $chkManager->manager_user_key;
+            if(!empty($_POST['namecall'])){
+                $req = "แจ้งแทน : " . getemployee($_POST['namecall']);
+            } else {
+                $req = "ผู้แจ้ง : {$namecall}";
+            }
             $line_text = "
 ------------------------
 Ticket : {$runticket}
 ------------------------
 {$name_user}
 แผนก : {$department}
-ผู้แจ้ง : {$namecall}
-สาขา : " . @prefixbranch($location) . "
+{$req}
+สาขา : {$location}
 ผู้อนุมัติ : {$setNameMg}
 รหัสสินทรัพย์ : {$asset}
 ------------------------
