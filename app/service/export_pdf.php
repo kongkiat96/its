@@ -25,9 +25,9 @@ $system_info = $getdata->my_sql_query($connect, null, 'system_info', null);
 $chk_case = $getdata->my_sql_query($connect, NULL, "problem_list", "ticket='" . htmlspecialchars($_GET['key']) . "'");
 
 if ($chk_case->pic_before == null) {
-    $mapImg = '<img class="img-thumbnail" src="../../resource/it/file_pic_now/no-img.png" width="70%">';
+    $mapImg = '<img class="img-thumbnail" src="../../resource/it/file_pic_now/no-img.png" width="40%">';
 } else {
-    $mapImg = '<img class="img-thumbnail" src="../../resource/it/delevymo/' . $chk_case->pic_before . '" width="70%">';
+    $mapImg = '<img class="img-thumbnail" src="../../resource/it/delevymo/' . $chk_case->pic_before . '" width="40%">';
 }
 
 // เนื้อหา PDF
@@ -82,7 +82,7 @@ $html = '
             border-radius: 4px; 
             padding: 5px; 
             max-width: 40%;
-            height: auto;
+            height: 40%;
         }
         .footer-label { 
             margin-top: 10px; 
@@ -184,4 +184,4 @@ $html = '
 $mpdf->WriteHTML($html);
 
 // สร้าง PDF และดาวน์โหลด
-$mpdf->Output('documentCase_' . $chk_case->ticket . '.pdf', 'D'); // 'I' สำหรับแสดงในเบราว์เซอร์, 'D' สำหรับดาวน์โหลด
+$mpdf->Output('documentCase_' . $chk_case->ticket . '.pdf', 'I'); // 'I' สำหรับแสดงในเบราว์เซอร์, 'D' สำหรับดาวน์โหลด
