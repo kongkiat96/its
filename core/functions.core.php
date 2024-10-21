@@ -184,6 +184,15 @@ function prefixConvertorequipment($prefixequipment)
     return $getprefix->device_type;
 }
 
+function countAccess($access_key)
+{
+    $getdata = new clear_db();
+    $connect = $getdata->my_sql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
+    mysqli_set_charset($connect, 'utf8');
+    $returnCount = $getdata->my_sql_string($connect, "SELECT COUNT(user_key) FROM access_user RIGHT JOIN employee ON access_user.user_key = employee.card_key WHERE access_user.access_key ='" . $access_key . "'");
+    return $returnCount;
+}
+
 // รายการที่แจ้ง
 function service($showservice)
 {

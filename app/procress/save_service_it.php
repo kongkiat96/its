@@ -31,38 +31,21 @@ if ($getcontrol < 999) {
 
             resizepic($pic, $fixname_pic);
 
-            // if (htmlspecialchars($_POST['se_id']) != '8') {
-            //     $getdata->my_sql_insert($connect, "problem_list", "
-            //     ticket='" . $runticket . "',
-            //     user_key ='" . $_SESSION['ukey'] . "',
-            //     department ='" . htmlspecialchars($_POST['department']) . "',
-            //     company = '" . htmlspecialchars($_POST['company']) . "',
-            //     se_id ='" . htmlspecialchars($_POST['se_id']) . "',
-            //     se_li_id ='" . htmlspecialchars($_POST['se_li']) . "',
-            //     se_other = '" . htmlspecialchars($_POST['other']) . "',
-            //     se_asset = '" . htmlspecialchars($_POST['se_asset']) . "',
-            //     pic_before = '" . $fixname_pic . "',
-            //     se_namecall = '" . htmlspecialchars($_POST['namecall']) . "',
-            //     se_location = '" . htmlspecialchars($_POST['location']) . "',
-            //     se_approve = '" . htmlspecialchars($_POST['approve']) . "',
-            //     date = '" . date("Y-m-d") . "',
-            //     time_start = '" . date("H:i:s") . "'");
-            // } else {
             $getApproveDep = in_array($_POST['se_id'], ['13', '16']) ? 'HR' : 'IT';
-            if (empty($_POST['approve'] || $_POST['approve'] == '-')) {
-                $chkManager =  $getdata->my_sql_query($connect, NULL, "manager", "user_key = '" . $_SESSION['ukey'] . "' LIMIT 1");
-            } else if (!empty($_POST['approve'] || $_POST['approve'] != '-')) {
-                $chkManager =  $getdata->my_sql_query($connect, NULL, "manager", "user_key = '" . $_POST['namecall'] . "' LIMIT 1");
+
+            if (empty($_POST['namecall']) && !empty($_POST['mg_approve'])) {
+                $chkManager = $_POST['mg_approve'];
+                $setMgApprove = getemployee($chkManager);
             } else {
-                $chkManager =  $getdata->my_sql_query($connect, NULL, "manager", "user_key = '" . $_SESSION['ukey'] . "' LIMIT 1");
+                $chkManager =  $getdata->my_sql_query($connect, NULL, "manager", "user_key = '" . $_POST['namecall'] . "' LIMIT 1");
+                $setMgApprove = getemployee($chkManager->manager_user_key);
             }
 
-            $mailManager =  $getdata->my_sql_query($connect, NULL, "user", "user_key = '" . $chkManager->manager_user_key . "'");
+            // $mailManager =  $getdata->my_sql_query($connect, NULL, "user", "user_key = '" . $chkManager->manager_user_key . "'");
 
-            $mapBranch = !empty($_POST['location']) ? htmlspecialchars($_POST['location']) : $_POST['department'];
+            $mapBranch = !empty($_POST['location']) ? htmlspecialchars($_POST['location']) : '75';
 
-            // echo $chkManager->manager_user_key; 13 16
-            if (COUNT($chkManager) == 0) {
+            if (empty($_POST['namecall']) && !empty($_POST['mg_approve'])) {
                 $getdata->my_sql_insert($connect, "problem_list", "
                 ticket='" . $runticket . "',
                 user_key ='" . $_SESSION['ukey'] . "',
@@ -75,13 +58,34 @@ if ($getcontrol < 999) {
                 pic_before = '" . $fixname_pic . "',
                 se_namecall = '" . $_SESSION['ukey'] . "',
                 se_location = '" . $mapBranch . "',
-                se_approve = '" . htmlspecialchars($_POST['approve']) . "',
-                card_status = 'approve_mg',
+                se_approve = '" . getemployee($chkManager) . "',
+                card_status = 'wait_approve',
+                manager_approve = '" . $chkManager . "',
+                manager_approve_status = 'N',
                 date = '" . date("Y-m-d") . "',
                 approve_department = '" . $getApproveDep . "',
                 time_start = '" . date("H:i:s") . "'");
+            } else if ($chkManager->manager_user_key != null) {
+                $getdata->my_sql_insert($connect, "problem_list", "
+                    ticket='" . $runticket . "',
+                    user_key ='" . $_SESSION['ukey'] . "',
+                    department ='" . htmlspecialchars($_POST['department']) . "',
+                    company = '" . htmlspecialchars($_POST['company']) . "',
+                    se_id ='" . htmlspecialchars($_POST['se_id']) . "',
+                    se_li_id ='" . htmlspecialchars($_POST['se_li']) . "',
+                    se_other = '" . htmlspecialchars($_POST['other']) . "',
+                    se_asset = '" . htmlspecialchars($_POST['se_asset']) . "',
+                    pic_before = '" . $fixname_pic . "',
+                    se_namecall = '" . $chkManager->user_key . "',
+                    se_location = '" . $mapBranch . "',
+                    se_approve = '" . getemployee($chkManager->manager_user_key) . "',
+                    card_status = 'wait_approve',
+                    manager_approve = '" . $chkManager->manager_user_key . "',
+                    manager_approve_status = 'N',
+                    date = '" . date("Y-m-d") . "',
+                    approve_department = '" . $getApproveDep . "',
+                    time_start = '" . date("H:i:s") . "'");
             } else {
-                // se_namecall = '" . $_SESSION['ukey'] . "',
                 $getdata->my_sql_insert($connect, "problem_list", "
                 ticket='" . $runticket . "',
                 user_key ='" . $_SESSION['ukey'] . "',
@@ -92,18 +96,14 @@ if ($getcontrol < 999) {
                 se_other = '" . htmlspecialchars($_POST['other']) . "',
                 se_asset = '" . htmlspecialchars($_POST['se_asset']) . "',
                 pic_before = '" . $fixname_pic . "',
-                se_namecall = '" . $chkManager->user_key . "',
+                se_namecall = '" . $_POST['namecall'] . "',
                 se_location = '" . $mapBranch . "',
-                se_approve = '" . getemployee($chkManager->manager_user_key) . "',
-                card_status = 'wait_approve',
-                manager_approve = '" . $chkManager->manager_user_key . "',
-                manager_approve_status = 'N',
+                se_approve = '" . htmlspecialchars($_POST['approve']) . "',
+                card_status = 'approve_mg',
                 date = '" . date("Y-m-d") . "',
                 approve_department = '" . $getApproveDep . "',
                 time_start = '" . date("H:i:s") . "'");
             }
-
-            // }
 
             $remove_charname = array('&', '!', '"', '%', 'amp;', 'quot;');
             $rc_other = str_replace($remove_charname, '-', htmlspecialchars($_POST['other']));
@@ -115,19 +115,19 @@ if ($getcontrol < 999) {
             $service = prefixConvertorService($_POST['se_id']);
             $problem = prefixConvertorServiceList($_POST['se_li']);
             $other = $rc_other;
-            $namecall = getemployee($_POST['namecall']);
+            // $namecall = getemployee($_POST['namecall']);
             // $namecall = $name_user;
             $location = prefixbranch($mapBranch);
             $asset = $_POST['se_asset'];
             $approve = $_POST['approve'];
             $date_send = date('d/m/Y');
-            $setNameMg = COUNT($chkManager) == 0 ? '-' : getemployee($chkManager->manager_user_key);
+            $setNameMg = $setMgApprove;
             $line_token = $getalert->alert_line_token; // Token
             // $mailMu = $chkManager->manager_user_key;
-            if(!empty($_POST['namecall'])){
+            if (!empty($_POST['namecall'])) {
                 $req = "แจ้งแทน : " . getemployee($_POST['namecall']);
             } else {
-                $req = "ผู้แจ้ง : {$namecall}";
+                $req = "ผู้แจ้ง : {$name_user}";
             }
             $line_text = "
 ------------------------
@@ -383,9 +383,9 @@ if (isset($_POST['save_approve'])) {
         if ($_POST['approve_status'] == 'Y') {
             $status = 'อนุมัติดำเนินแจ้งงานจาก SV';
         } else {
-            $status = @cardStatus_for_line($_POST['approve_status']) .' '. "จาก SV";
+            $status = @cardStatus_for_line($_POST['approve_status']) . ' ' . "จาก SV";
         }
-        
+
         // $getFlag = $_POST['approve_status'] == "Y" ? 'approve_mg' : $_POST['approve_status'];
         $getdata->my_sql_update(
             $connect,
@@ -403,7 +403,7 @@ if (isset($_POST['save_approve'])) {
             "problem_comment",
             "card_status='" . htmlspecialchars($getFlag) . "',
       admin_update='" . $name_key . "',
-      comment='" . htmlspecialchars($_POST['comment']) . " - ".$status."',
+      comment='" . htmlspecialchars($_POST['comment']) . " - " . $status . "',
       date ='" . date("Y-m-d H:i:s") . "',
       ticket='" . htmlspecialchars($_POST['card_key']) . "'"
         );
@@ -413,7 +413,7 @@ if (isset($_POST['save_approve'])) {
         // ส่งข้อมูลเข้าไลน์
         $ticket = $_POST['ticket'];
         $name_admin = $_POST['admin'];
-        
+
         // $status = $_POST['off_case_status'];
         $date_send = date('d/m/Y');
         $time_send = date("H:i");
@@ -646,12 +646,11 @@ if (isset($_POST['save_approve_hr'])) {
     if (!empty($_POST['approve_status'])) {
         // $getFlag = $_POST['approve_status'] == "Y" ? null : $_POST['approve_status'];
         // $getFlag = $_POST['approve_status'] == "Y" ? 'work_hr' : $_POST['approve_status'];
-        if($_POST['approve_status'] == "Y"){
+        if ($_POST['approve_status'] == "Y") {
             $getFlag = 'work_hr';
             $isAlert = 'อนุมัติจาก Hr';
             $flag_comment = 'อนุมัติจาก Hr';
-
-        } else if($_POST['approve_status'] == "reject_hr"){
+        } else if ($_POST['approve_status'] == "reject_hr") {
             $getFlag = 'reject_hr';
             $isAlert = 'แจ้งดำเนินงานอีกครั้ง';
             $flag_comment = 'แจ้งดำเนินงานอีกครั้ง';

@@ -29,7 +29,8 @@ $show_menu = $getdata->my_sql_query($connect, null, "access_list", "access_key =
             <tbody>
                 <?php
                 $u = 0;
-                $getaccess = $getdata->my_sql_select($connect, null, "access_user", "access_key ='" . htmlspecialchars($_GET['key']) . "'");
+                // $getaccess = $getdata->my_sql_select($connect, null, "access_user", "access_key ='" . htmlspecialchars($_GET['key']) . "'");
+                $getaccess = $getdata->my_sql_string($connect, "SELECT access_user.user_key FROM access_user RIGHT JOIN employee ON access_user.user_key = employee.card_key WHERE access_user.access_key ='" . htmlspecialchars($_GET['key']) . "' ORDER BY user_key ASC");
 
                 while ($showaccess_user = mysqli_fetch_object($getaccess)) {
                     $u++;

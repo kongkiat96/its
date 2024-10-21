@@ -3,6 +3,7 @@ require_once 'procress/save_user.php';
 require_once 'procress/save_service_it.php';
 // require_once 'auto/getalert.php';
 echo @$alert;
+
 ?>
 <script>
     function refreshData() {
@@ -139,8 +140,9 @@ echo @$alert;
                             </div>
                         </div>
                         <div class="col-6">
-                            <label for="location" id="locationLabel">สาขา <span class="text-danger">(กรณีแจ้งแทนผู้อื่น)</span></label>
-                            <select class="form-control select2bs4" style="width: 100%;" name="location" id="location">
+                            <!-- <label for="location" id="locationLabel">สาขา <span class="text-danger">(กรณีแจ้งแทนผู้อื่น)</span></label> -->
+                            <label for="location" id="locationLabel">สาขา <span style="font-size: 90%;" class="text-danger">(กรุณาเลือกสาขาที่แจ้ง หรือสาขาที่แจ้งแทนผู้อื่น)</span></label>
+                            <select class="form-control select2bs4" style="width: 100%;" name="location" id="location" required>
                                 <option value="">--- เลือก สาขา ---</option>
                                 <?php
                                 $getbranch = $getdata->my_sql_select($connect, NULL, "branch", "id AND status ='1' ORDER BY id ");
@@ -149,7 +151,6 @@ echo @$alert;
                                 }
                                 ?>
                             </select>
-
                             <div class="invalid-feedback">
                                 เลือก สาขา.
                             </div>
@@ -158,15 +159,17 @@ echo @$alert;
                     <div class="form-group row">
                         <div class="col-12">
                             <label for="approve">ผู้อนุมัติ</label>
-                            <!-- <?php $chkManager =  $getdata->my_sql_query($connect, NULL, "manager", "user_key = '" . $_SESSION['ukey'] . "'");?> -->
-                            <!-- <input type="text" class="form-control input-sm" name="approve" id="approve"> -->
-                            <input type="text" class="form-control input-sm" id="approve" name="approve" readonly">
+
+                            <input type="text" class="form-control" id="approve" name="approve" readonly>
+
                         </div>
                     </div>
                     <input type="text" hidden name="name_em" id="name_em" value="<?php echo @getemployee($userdata->user_key); ?>" class="form-control" readonly>
                     <input type="text" hidden name="gt_department" id="gt_department" value="<?php echo @prefixConvertorDepartment($getemployee->user_department); ?>" class="form-control" readonly>
                     <input type="text" hidden name="department" id="department" value="<?php echo $getemployee->user_department; ?>" readonly>
                     <input type="text" hidden name="company" id="company" value="<?php echo $getemployee->department_id; ?>" readonly>
+                    <?php $chkManager = $getdata->my_sql_query($connect, NULL, "manager", "user_key = '" . $_SESSION['ukey'] . "'"); ?>
+                    <input type="text" hidden name="mg_approve" id="mg_approve" value="<?php echo $chkManager->manager_user_key; ?>">
                 </div>
                 <div class="modal-footer">
                     <button class="ladda-button btn btn-primary btn-square btn-ladda bg-danger" type="submit" name="save_newcase" data-style="expand-left">
@@ -667,11 +670,11 @@ echo @$alert;
                                     echo '<span class="badge badge-info">รอการอนุมัติจาก HR</span>';
                                 } else if ($show_total->card_status == 'over_work') {
                                     echo '<span class="badge badge-danger">ปิดงานอัตโนมัติ</span>';
-                                }  else if ($show_total->card_status == 'reject') {
+                                } else if ($show_total->card_status == 'reject') {
                                     echo '<span class="badge badge-warning">ตรวจสอบอีกครั้ง</span>';
-                                } else if ($show_total->card_status == 'reject_hr'){
+                                } else if ($show_total->card_status == 'reject_hr') {
                                     echo '<span class="badge badge-warning">แจ้งดำเนินงานอีกครั้ง</span>';
-                                }else if ($show_total->card_status == null && $show_total->work_flag == null) {
+                                } else if ($show_total->card_status == null && $show_total->work_flag == null) {
                                     echo '<span class="badge badge-danger">ยกเลิกงานโดยผู้แจ้ง</span>';
                                 } else {
                                     if (in_array($show_total->card_status, ['2e34609794290a770cb0349119d78d21', 'fe8ae3ced9e7e738d78589bf6610c4da']) && $show_total->work_flag != 'work_success') {
@@ -777,11 +780,11 @@ echo @$alert;
                                         echo '<span class="badge badge-danger">ปิดงานอัตโนมัติ</span>';
                                     } else if ($show_total->card_status == 'reject') {
                                         echo '<span class="badge badge-warning">ตรวจสอบอีกครั้ง</span>';
-                                    } else if ($show_total->card_status == 'reject_hr'){
+                                    } else if ($show_total->card_status == 'reject_hr') {
                                         echo '<span class="badge badge-warning">แจ้งดำเนินงานอีกครั้ง</span>';
                                     } else if ($show_total->card_status == null && $show_total->work_flag == null) {
                                         echo '<span class="badge badge-danger">ยกเลิกงานโดยผู้แจ้ง</span>';
-                                    }else {
+                                    } else {
                                         if (in_array($show_total->card_status, ['2e34609794290a770cb0349119d78d21', 'fe8ae3ced9e7e738d78589bf6610c4da']) && $show_total->work_flag != 'work_success') {
                                             echo '<span class="badge badge-info">รอ Support Manager ตรวจสอบ</span>';
                                         } else if ($show_total->card_status == 'approve_workcheck') {
@@ -806,7 +809,7 @@ echo @$alert;
                                     echo '<a href="#" data-toggle="modal" data-target="#check_work_user" data-whatever="' . @$show_total->ticket . '" class="btn btn-sm btn-warning  btn-outline" title="ดำเนินการ"><i class="fa fa-edit"></i></a>';
                                 }
                                 ?>
-                                <?php if (in_array($show_total->card_status, ['57995055c28df9e82476a54f852bd214','reject_hr'])) {
+                                <?php if (in_array($show_total->card_status, ['57995055c28df9e82476a54f852bd214', 'reject_hr'])) {
                                     echo '<a href="#" data-toggle="modal" data-target="#reopen_case" data-whatever="' . @$show_total->ticket . '" class="btn btn-sm btn-danger  btn-outline" title="แจ้งงานอีกครั้ง"><i class="fa fa-retweet"></i></a>';
                                 } ?>
                                 <?php
