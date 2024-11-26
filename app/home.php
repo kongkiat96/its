@@ -141,8 +141,8 @@ echo @$alert;
                         </div>
                         <div class="col-6">
                             <!-- <label for="location" id="locationLabel">สาขา <span class="text-danger">(กรณีแจ้งแทนผู้อื่น)</span></label> -->
-                            <label for="location" id="locationLabel">สาขา <span style="font-size: 90%;" class="text-danger">(กรุณาเลือกสาขาที่แจ้ง หรือสาขาที่แจ้งแทนผู้อื่น)</span></label>
-                            <select class="form-control select2bs4" style="width: 100%;" name="location" id="location" required>
+                            <label for="location" id="locationLabel">สาขา <span style="font-size: 90%;" class="text-danger">(กรณีแจ้งแทนผู้อื่น)</span></label>
+                            <select class="form-control select2bs4" style="width: 100%;" name="location" id="location">
                                 <option value="">--- เลือก สาขา ---</option>
                                 <?php
                                 $getbranch = $getdata->my_sql_select($connect, NULL, "branch", "id AND status ='1' ORDER BY id ");

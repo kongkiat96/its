@@ -43,7 +43,8 @@ if ($getcontrol < 999) {
 
             // $mailManager =  $getdata->my_sql_query($connect, NULL, "user", "user_key = '" . $chkManager->manager_user_key . "'");
 
-            $mapBranch = !empty($_POST['location']) ? htmlspecialchars($_POST['location']) : '75';
+            // $mapBranch = !empty($_POST['location']) ? htmlspecialchars($_POST['location']) : '75';
+            $mapBranch = !empty($_POST['location']) ? $_POST['location'] : getIDBranch(trim($_POST['gt_department']));
 
             if (empty($_POST['namecall']) && !empty($_POST['mg_approve'])) {
                 $getdata->my_sql_insert($connect, "problem_list", "

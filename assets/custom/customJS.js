@@ -113,6 +113,19 @@ jQuery(document).ready(function () {
 
 $(function () {
 
+  $('#data-all').DataTable({
+    dom: 'Bfrtip',
+    scrollX: true,
+    searching: true,
+    aLengthMenu: [[50, 100, 150, 200, -1], [50, 100, 150, 200, "All"]],
+    pageLength: 50,
+    buttons: [
+      'colvis',
+      'pageLength'
+
+    ],
+  });
+
   $('#ForExport').DataTable({
     dom: 'Bfrtip',
     scrollX: true,

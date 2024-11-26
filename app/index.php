@@ -78,6 +78,9 @@ $stmt->execute();
       z-index: 2;
       margin-right: 10px;
     }
+    .dataTables_filter {
+      float: right;
+    }
   </style>
 
 </head>
