@@ -155,9 +155,7 @@
 												?>
 												<button class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_menu" data-whatever="<?php echo @$showmenu->menu_key; ?>" data-top="toptitle" data-placement="top" title="แก้ไข"><i class="fa fa-edit fa-fw"></i></button>
 
-												<?php if ($_SESSION['ukey'] == 'k0ngk1at') { ?>
 													<button type="button" class="btn btn-danger btn-sm" onclick="javascript:delete_menu('<?php echo @$showmenu->menu_key; ?>');" data-top="toptitle" data-placement="top" title="ลบรายการ"><i class="fa fa-trash-alt fa-fw"></i></button>
-												<?php } ?>
 
 											</td>
 										</tr>

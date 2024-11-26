@@ -68,9 +68,8 @@
                                             <td><?php echo @$a; ?></td>
                                             <td><?php echo @$showaccess->access_key; ?></td>
                                             <td>&nbsp;<span data-toggle="tooltip" data-placement="right" title="<?php echo $showaccess->access_detail; ?>"><?php echo @$showaccess->access_name; ?></span></td>
-                                            <td><?php echo @number_format($getdata->my_sql_show_rows($connect, "access_user", "access_key='" . $showaccess->access_key . "'")); ?></td>
+                                            <td><?php echo @number_format($getdata->my_sql_show_rows($connect, "access_user RIGHT JOIN employee ON access_user.user_key = employee.card_key", "access_key='" . $showaccess->access_key . "'")); ?></td>
                                             <td>
-                                                <?php if ($_SESSION['ukey'] === 'k0ngk1at') { ?>
                                                     <?php
 
                                                     if ($showaccess->access_status == '1') {
@@ -79,7 +78,6 @@
                                                         echo '<button type="button" class="btn btn-danger btn-sm" id="btn-' . @$showaccess->access_key . '" onclick="javascript:Accesslock(\'' . @$showaccess->access_key . '\');" data-top="toptitle" data-placement="top" title="เปิด/ปิดการใช้งาน"><i class="fa fa-lock fa-fw" id="icon-' . @$showaccess->access_key . '"></i> <span id="text-' . @$showaccess->access_key . '"></span></button>';
                                                     }
                                                     ?>
-                                                <?php } ?>
                                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#showaccess_user" data-whatever="<?php echo @$showaccess->access_key; ?>" data-top="toptitle" data-placement="top" title="ตรวจสอบการเข้าถึง"><i class="fa fa-user-shield fa-fw"></i></button>
                                             </td>
                                         </tr>
